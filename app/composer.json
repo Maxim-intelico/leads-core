@@ -1,11 +1,11 @@
 {
     "name": "leads/core",
-    "description": "Shared core library for PlatLeads",
+    "description": "Shared core library for Leads",
     "type": "library",
     "license": "MIT",
     "minimum-stability": "stable",
     "prefer-stable": true,
-    "version": "0.0.2",
+    "version": "0.0.3",
     "authors": [
         {
             "name": "Maxim Lahoiski",
@@ -18,12 +18,12 @@
     },
     "autoload": {
         "psr-4": {
-            "PlatLeads\\SharedCore\\": "src/"
+            "Leads\\Core\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "PlatLeads\\SharedCore\\Tests\\": "tests/"
+            "Leads\\Core\\Tests\\": "tests/"
         }
     }
 }
