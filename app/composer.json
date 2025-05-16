@@ -1,11 +1,11 @@
 {
-    "name": "platleads/shared-core",
+    "name": "leads/core",
     "description": "Shared core library for PlatLeads",
     "type": "library",
     "license": "MIT",
     "minimum-stability": "stable",
     "prefer-stable": true,
-    "version": "0.0.1",
+    "version": "0.0.2",
     "authors": [
         {
             "name": "Maxim Lahoiski",
