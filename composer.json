@@ -5,7 +5,7 @@
     "license": "MIT",
     "minimum-stability": "stable",
     "prefer-stable": true,
-    "version": "0.0.6",
+    "version": "0.0.7",
     "authors": [
         {
             "name": "Maxim Lahoiski",
@@ -18,12 +18,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Leads\\": "src/"
+            "Leads\\Core\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Leads\\Tests\\": "tests/"
+            "Leads\\Core\\Tests\\": "tests/"
         }
     }
 }

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Leads\Pagination;
+namespace Leads\Core\Pagination;
 
 interface PaginationInterface
 {

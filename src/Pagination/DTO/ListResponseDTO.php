@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Leads\Pagination\DTO;
+namespace Leads\Core\Pagination\DTO;
 
 class ListResponseDTO
 {

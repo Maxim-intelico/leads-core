@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Leads\Pagination;
+namespace Leads\Core\Pagination;
 
-use Leads\Pagination\DTO\ListResponseDTO;
-use Leads\Pagination\DTO\PaginationDTO;
+use Leads\Core\Pagination\DTO\ListResponseDTO;
+use Leads\Core\Pagination\DTO\PaginationDTO;
 
 final readonly class Pagination
 {
