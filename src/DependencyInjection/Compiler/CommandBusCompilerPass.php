@@ -14,7 +14,7 @@ final class CommandBusCompilerPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container): void
     {
-        $handlersMap = [];
+        $commandsMap = [];
 
         foreach ($container->findTaggedServiceIds('leads-core.use-case.handler') as $id => $definition) {
             $definition = $container->getDefinition($id);
@@ -31,12 +31,12 @@ final class CommandBusCompilerPass implements CompilerPassInterface
 
             /** @var AsCommandHandler $attr */
             $attr = $attributes[0]->newInstance();
-            $handlersMap[$attr->commandClass] = new Reference($id);
+            $commandsMap[$attr->commandClass] = new Reference($id);
         }
 
         $container
             ->register(CommandBus::class, CommandBus::class)
-            ->setArguments([$handlersMap])
+            ->setArguments([$commandsMap])
             ->setPublic(true);
     }
 }

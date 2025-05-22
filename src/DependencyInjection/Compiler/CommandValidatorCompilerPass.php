@@ -14,7 +14,7 @@ final class CommandValidatorCompilerPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container): void
     {
-        $validatorMap = [];
+        $validatorsMap = [];
 
         foreach ($container->findTaggedServiceIds('leads-core.use-case.validator') as $id => $definition) {
             $definition = $container->getDefinition($id);
@@ -31,12 +31,12 @@ final class CommandValidatorCompilerPass implements CompilerPassInterface
 
             /** @var AsCommandValidator $attr */
             $attr = $attributes[0]->newInstance();
-            $validatorMap[$attr->commandClass][] = new Reference($id);
+            $validatorsMap[$attr->commandClass][] = new Reference($id);
         }
 
         $container
             ->register(CommandValidator::class, CommandValidator::class)
-            ->setArguments([$validatorMap])
+            ->setArguments([$validatorsMap])
             ->setPublic(true);
     }
 }
