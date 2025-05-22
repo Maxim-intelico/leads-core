@@ -1,0 +1,7 @@
+services:
+    Leads\Core\:
+        resource: '../src/'
+
+    _instanceof:
+        Leads\Core\CommandBus\HandlerInterface:
+            tags: ['leads-core.use-case.handler']
