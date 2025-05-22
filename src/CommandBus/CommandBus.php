@@ -7,7 +7,9 @@ namespace Leads\Core\CommandBus;
 final class CommandBus
 {
     public function __construct(
-        private CommandBusLocator $commandBusLocator,
+        /** @var array<class-string<CommandInterface>, HandlerInterface> */
+        private array $commandsMap,
+        private CommandValidator $commandValidator,
     ) {
     }
 
@@ -16,7 +18,9 @@ final class CommandBus
      */
     public function handle(CommandInterface $command)
     {
-        $handler = $this->commandBusLocator->getHandler($command);
+        $handler = $this->commandsMap[$command::class] ?? throw new \LogicException('Handler not found.');
+
+        $this->commandValidator->validate($command);
 
         return $handler->handle($command);
     }

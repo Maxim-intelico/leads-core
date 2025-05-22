@@ -16,7 +16,8 @@
         "php": ">=8.3",
         "doctrine/dbal": "^4.0",
         "symfony/dependency-injection": "^7.2",
-        "symfony/http-kernel": "^7.2"
+        "symfony/http-kernel": "^7.2",
+        "symfony/config": "^7.2"
     },
     "autoload": {
         "psr-4": {

@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace Leads\Core\DependencyInjection\Compiler;
 
-use Leads\Core\CommandBus\AsCommandHandler;
-use Leads\Core\CommandBus\CommandBus;
+use Leads\Core\CommandBus\AsCommandValidator;
+use Leads\Core\CommandBus\CommandValidator;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
-final class CommandBusCompilerPass implements CompilerPassInterface
+final class CommandValidatorCompilerPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container): void
     {
-        $handlersMap = [];
+        $validatorMap = [];
 
-        foreach ($container->findTaggedServiceIds('leads-core.use-case.handler') as $id => $definition) {
+        foreach ($container->findTaggedServiceIds('leads-core.use-case.validator') as $id => $definition) {
             $definition = $container->getDefinition($id);
             $class = $definition->getClass();
             if ($class === null || !class_exists($class)) {
@@ -24,19 +24,19 @@ final class CommandBusCompilerPass implements CompilerPassInterface
             }
 
             $reflection = new \ReflectionClass($class);
-            $attributes = $reflection->getAttributes(AsCommandHandler::class);
+            $attributes = $reflection->getAttributes(AsCommandValidator::class);
             if ($attributes === []) {
                 continue;
             }
 
-            /** @var AsCommandHandler $attr */
+            /** @var AsCommandValidator $attr */
             $attr = $attributes[0]->newInstance();
-            $handlersMap[$attr->commandClass] = new Reference($id);
+            $validatorMap[$attr->commandClass][] = new Reference($id);
         }
 
         $container
-            ->register(CommandBus::class, CommandBus::class)
-            ->setArguments([$handlersMap])
+            ->register(CommandValidator::class, CommandValidator::class)
+            ->setArguments([$validatorMap])
             ->setPublic(true);
     }
 }
