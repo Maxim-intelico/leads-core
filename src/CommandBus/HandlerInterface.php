@@ -10,7 +10,7 @@ namespace Leads\Core\CommandBus;
 interface HandlerInterface
 {
     /**
-     * @param CommandInterface $command
+     * @param TCommand $command
      *
      * @psalm-suppress MissingReturnType
      */

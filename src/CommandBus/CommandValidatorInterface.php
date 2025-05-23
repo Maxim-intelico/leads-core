@@ -10,7 +10,7 @@ namespace Leads\Core\CommandBus;
 interface CommandValidatorInterface
 {
     /**
-     * @param CommandInterface $command
+     * @param TCommand $command
      */
     public function validate(CommandInterface $command): void;
 }
