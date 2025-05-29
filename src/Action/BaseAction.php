@@ -15,7 +15,7 @@ class BaseAction
     ) {
     }
 
-    public function validate(object $object, ?array $groups = null): void
+    protected function validate(object $object, ?array $groups = null): void
     {
         $this->apiValidator->validate($object, $groups);
     }
