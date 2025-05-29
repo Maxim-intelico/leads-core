@@ -126,7 +126,7 @@ class ExampleRepository
 <details>
 <summary>BaseAction</summary>
 
-    Adds a basic functioon for validating request api and template responses.
+    Adds a basic function for validating request api and template responses.
     See methods of the BaseAction.php class
 
 </details>
