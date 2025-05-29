@@ -120,3 +120,13 @@ class ExampleRepository
 ```
 
 </details>
+
+<br>
+
+<details>
+<summary>BaseAction</summary>
+
+    Adds a basic functioon for validating request api and template responses.
+    See methods of the BaseAction.php class
+
+</details>
