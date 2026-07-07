@@ -8,6 +8,7 @@ use Leads\Core\CommandBus\AsCommandHandler;
 use Leads\Core\CommandBus\CommandBus;
 use Leads\Core\CommandBus\CommandValidator;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\Compiler\ServiceLocatorTagPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
@@ -35,9 +36,11 @@ final class CommandBusCompilerPass implements CompilerPassInterface
             $commandsMap[$attr->commandClass] = new Reference($id);
         }
 
+        $handlers = ServiceLocatorTagPass::register($container, $commandsMap, CommandBus::class);
+
         $container
             ->register(CommandBus::class, CommandBus::class)
-            ->setArguments([$commandsMap, new Reference(CommandValidator::class)])
+            ->setArguments([$handlers, new Reference(CommandValidator::class)])
             ->setPublic(true);
     }
 }
