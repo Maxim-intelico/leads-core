@@ -7,6 +7,7 @@ namespace Leads\Core\DependencyInjection\Compiler;
 use Leads\Core\CommandBus\AsCommandValidator;
 use Leads\Core\CommandBus\CommandValidator;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\Compiler\ServiceLocatorTagPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
@@ -15,6 +16,7 @@ final class CommandValidatorCompilerPass implements CompilerPassInterface
     public function process(ContainerBuilder $container): void
     {
         $validatorsMap = [];
+        $locatorMap = [];
 
         foreach ($container->findTaggedServiceIds('leads-core.use-case.validator') as $id => $definition) {
             $definition = $container->getDefinition($id);
@@ -31,12 +33,15 @@ final class CommandValidatorCompilerPass implements CompilerPassInterface
 
             /** @var AsCommandValidator $attr */
             $attr = $attributes[0]->newInstance();
-            $validatorsMap[$attr->commandClass][] = new Reference($id);
+            $validatorsMap[$attr->commandClass][] = $id;
+            $locatorMap[$id] = new Reference($id);
         }
+
+        $validators = ServiceLocatorTagPass::register($container, $locatorMap, CommandValidator::class);
 
         $container
             ->register(CommandValidator::class, CommandValidator::class)
-            ->setArguments([$validatorsMap])
+            ->setArguments([$validators, $validatorsMap])
             ->setPublic(true);
     }
 }
