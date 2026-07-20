@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Leads\Core\Exception;
 
-class EntityNotFoundException extends \RuntimeException
+class AccessDeniedException extends \RuntimeException
 {
     public function __construct(
-        string $message = 'Entity not found.',
-        int $code = 404,
+        string $message = 'Access Denied.',
+        int $code = 403,
         ?\Throwable $previous = null,
     ) {
         parent::__construct(message: $message, code: $code, previous: $previous);

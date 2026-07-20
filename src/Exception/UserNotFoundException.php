@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Leads\Core\Exception;
 
-class EntityNotFoundException extends \RuntimeException
+class UserNotFoundException extends \RuntimeException
 {
     public function __construct(
-        string $message = 'Entity not found.',
+        string $message = 'User not found.',
         int $code = 404,
         ?\Throwable $previous = null,
     ) {
