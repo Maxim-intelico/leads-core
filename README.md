@@ -203,7 +203,18 @@ Available response helpers:
 
 ## Exceptions
 
-- `Leads\Core\Exception\EntityNotFoundException` — a `\LogicException` with message `Entity not found` and code 404, for signalling missing entities from repositories/handlers.
+The `Leads\Core\Exception` namespace provides ready-to-use domain exceptions. All of them extend `\RuntimeException` and carry an HTTP-like status code in `getCode()`, so an exception listener can map them to responses directly. Each constructor accepts an optional custom message, code override and `previous` throwable:
+
+- `Leads\Core\Exception\EntityNotFoundException` — `Entity not found.`, code 404; for missing entities in repositories/handlers
+- `Leads\Core\Exception\UserNotFoundException` — `User not found.`, code 404
+- `Leads\Core\Exception\AccessDeniedException` — `Access Denied.`, code 403
+
+```php
+use Leads\Core\Exception\EntityNotFoundException;
+
+$order = $repository->find($id)
+    ?? throw new EntityNotFoundException(sprintf('Order "%s" not found.', $id));
+```
 
 ## License
 
