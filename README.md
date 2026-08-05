@@ -1,6 +1,6 @@
 # leads/core
 
-Shared core bundle for Leads projects built on the Symfony Framework. It provides a lightweight command bus, DBAL-based pagination, API request validation helpers and base controller utilities.
+Shared core bundle for Leads projects built on the Symfony Framework. It provides DBAL-based pagination, API request validation helpers and base controller utilities.
 
 ## Requirements
 
@@ -22,104 +22,6 @@ return [
     Leads\Core\LeadsCoreBundle::class => ['all' => true],
 ];
 ```
-
-## Command bus
-
-A minimal synchronous command bus. Handlers and validators are discovered by PHP attributes and wired at container compile time; they are instantiated lazily through a service locator — only when their command is actually dispatched.
-
-### 1. Define a command
-
-```php
-use Leads\Core\CommandBus\CommandInterface;
-
-final readonly class CreateOrderCommand implements CommandInterface
-{
-    public function __construct(
-        public string $customerId,
-        public int $amount,
-    ) {
-    }
-}
-```
-
-### 2. Define a handler
-
-Exactly one handler per command, marked with `#[AsCommandHandler]`:
-
-```php
-use Leads\Core\CommandBus\AsCommandHandler;
-use Leads\Core\CommandBus\CommandInterface;
-use Leads\Core\CommandBus\HandlerInterface;
-
-/**
- * @implements HandlerInterface<CreateOrderCommand>
- */
-#[AsCommandHandler(commandClass: CreateOrderCommand::class)]
-final readonly class CreateOrderHandler implements HandlerInterface
-{
-    /**
-     * @param CreateOrderCommand $command
-     */
-    public function handle(CommandInterface $command)
-    {
-        // create the order, return whatever the caller needs (e.g. an id)
-    }
-}
-```
-
-### 3. Define validators (optional)
-
-Any number of validators per command, marked with `#[AsCommandValidator]`. All matching validators run before the handler; a validator reports failure by throwing `CommandValidatorException`:
-
-```php
-use Leads\Core\CommandBus\AsCommandValidator;
-use Leads\Core\CommandBus\CommandInterface;
-use Leads\Core\CommandBus\CommandValidatorException;
-use Leads\Core\CommandBus\CommandValidatorInterface;
-
-/**
- * @implements CommandValidatorInterface<CreateOrderCommand>
- */
-#[AsCommandValidator(commandClass: CreateOrderCommand::class)]
-final readonly class CreateOrderAmountValidator implements CommandValidatorInterface
-{
-    /**
-     * @param CreateOrderCommand $command
-     */
-    public function validate(CommandInterface $command): void
-    {
-        if ($command->amount <= 0) {
-            throw new CommandValidatorException('Amount must be positive.');
-        }
-    }
-}
-```
-
-### 4. Dispatch
-
-Inject `CommandBus` and call `handle()`:
-
-```php
-use Leads\Core\CommandBus\CommandBus;
-
-final readonly class OrderService
-{
-    public function __construct(
-        private CommandBus $commandBus,
-    ) {
-    }
-
-    public function createOrder(string $customerId, int $amount): mixed
-    {
-        return $this->commandBus->handle(new CreateOrderCommand($customerId, $amount));
-    }
-}
-```
-
-Exceptions thrown by `CommandBus::handle()`:
-
-- `Leads\Core\CommandBus\CommandValidatorException` — a validator rejected the command (default code 400)
-- `Leads\Core\CommandBus\HandlerNotFoundException` — no handler is registered for the command class
 
 ## Pagination
 
