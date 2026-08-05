@@ -23,6 +23,12 @@
         "symfony/validator": "^7.2 || ^8.0",
         "symfony/yaml": "^7.2 || ^8.0"
     },
+    "require-dev": {
+        "smi2/phpclickhouse": "^1.6 || ^1.26"
+    },
+    "suggest": {
+        "smi2/phpclickhouse": "Required to use Leads\\Core\\Pagination\\ClickHousePagination (^1.6 || ^1.26)"
+    },
     "autoload": {
         "psr-4": {
             "Leads\\Core\\": "src/"

@@ -166,6 +166,34 @@ The total is computed by wrapping your query in a `COUNT(*)` subquery (with `ORD
 
 To paginate a different data source, implement `Leads\Core\Pagination\PaginationInterface` (`getItems(int $offset, int $limit): array` and `getTotal(): int`) and pass it instead of `DBALPagination`.
 
+### ClickHouse
+
+`ClickHousePagination` runs the same DBAL `QueryBuilder`-built query against ClickHouse via the `smi2/phpclickhouse` client. The package is an optional dependency — install it in your project first:
+
+```bash
+composer require smi2/phpclickhouse
+```
+
+```php
+use ClickHouseDB\Client;
+use Leads\Core\Pagination\ClickHousePagination;
+use Leads\Core\Pagination\Pagination;
+
+return (new Pagination(
+    page: $page,
+    perPage: $perPage,
+    pagination: new ClickHousePagination(
+        client: $client, // ClickHouseDB\Client
+        qb: $qb,
+    ),
+))->paginate();
+```
+
+Constraints:
+
+- The `QueryBuilder` must use **named parameters** (`:name`) — positional `?` placeholders are not substituted by the ClickHouse client.
+- The SQL (including `LIMIT`/`OFFSET` syntax and identifier quoting) is rendered by the DBAL platform of the connection the `QueryBuilder` was created from, so use a connection whose platform produces ClickHouse-compatible SQL (MySQL and PostgreSQL platforms are fine).
+
 ## API validation and base controller
 
 `ApiValidator` wraps the Symfony Validator: it validates an object against its constraint attributes and throws `ApiValidationException` if there are violations. The exception exposes the violations as `getErrors()` — a list of `['property' => ..., 'message' => ...]` pairs, also JSON-encoded into the exception message.
