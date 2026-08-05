@@ -5,7 +5,7 @@
     "license": "MIT",
     "minimum-stability": "stable",
     "prefer-stable": true,
-    "version": "0.0.16",
+    "version": "1.0.0",
     "authors": [
         {
             "name": "Maxim Lahoiski",
@@ -15,7 +15,6 @@
     "require": {
         "php": ">=8.3",
         "doctrine/dbal": "^4.0",
-        "psr/container": "^2.0",
         "symfony/dependency-injection": "^7.2 || ^8.0",
         "symfony/http-foundation": "^7.2 || ^8.0",
         "symfony/http-kernel": "^7.2 || ^8.0",
