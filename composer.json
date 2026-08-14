@@ -5,7 +5,7 @@
     "license": "MIT",
     "minimum-stability": "stable",
     "prefer-stable": true,
-    "version": "1.0.1",
+    "version": "1.1.0",
     "authors": [
         {
             "name": "Maxim Lahoiski",
@@ -13,17 +13,21 @@
         }
     ],
     "require": {
-        "php": ">=8.3",
+        "php": ">=8.4",
         "doctrine/dbal": "^4.0",
-        "symfony/dependency-injection": "^7.2 || ^8.0",
-        "symfony/http-foundation": "^7.2 || ^8.0",
-        "symfony/http-kernel": "^7.2 || ^8.0",
-        "symfony/config": "^7.2 || ^8.0",
-        "symfony/validator": "^7.2 || ^8.0",
-        "symfony/yaml": "^7.2 || ^8.0"
+        "symfony/dependency-injection": "^8.1",
+        "symfony/http-foundation": "^8.1",
+        "symfony/http-kernel": "^8.1",
+        "symfony/config": "^8.1",
+        "symfony/validator": "^8.1",
+        "symfony/yaml": "^8.1"
     },
     "require-dev": {
-        "smi2/phpclickhouse": "^1.6 || ^1.26"
+        "smi2/phpclickhouse": "^1.6 || ^1.26",
+        "friendsofphp/php-cs-fixer": "^3.95",
+        "squizlabs/php_codesniffer": "^4.0",
+        "vimeo/psalm": "^6.16",
+        "rector/rector": "^2.6"
     },
     "suggest": {
         "smi2/phpclickhouse": "Required to use Leads\\Core\\Pagination\\ClickHousePagination (^1.6 || ^1.26)"
@@ -37,5 +41,14 @@
         "psr-4": {
             "Leads\\Core\\Tests\\": "tests/"
         }
+    },
+    "scripts": {
+        "cs": "vendor/bin/php-cs-fixer fix --diff --dry-run -v --config=.php-cs-fixer.php",
+        "cs-fix": "vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php",
+        "psalm": "psalm",
+        "rector": "vendor/bin/rector process --dry-run",
+        "rector-fix": "vendor/bin/rector process",
+        "code-sniffer": "vendor/bin/phpcs -s",
+        "code-sniffer-fix": "vendor/bin/phpcbf"
     }
 }

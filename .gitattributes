@@ -1,0 +1,7 @@
+/tests             export-ignore
+/psalm.xml         export-ignore
+/rector.php        export-ignore
+/.php-cs-fixer.php export-ignore
+/phpcs.xml         export-ignore
+/.gitignore        export-ignore
+/.gitattributes    export-ignore

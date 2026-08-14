@@ -6,9 +6,9 @@ namespace Leads\Core;
 
 use Leads\Core\DependencyInjection\LeadsCoreExtension;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
-use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Symfony\Component\DependencyInjection\Kernel\AbstractBundle;
 
-final class LeadsCoreBundle extends Bundle
+final class LeadsCoreBundle extends AbstractBundle
 {
     public function getContainerExtension(): ?ExtensionInterface
     {

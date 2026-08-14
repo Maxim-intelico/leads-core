@@ -7,14 +7,18 @@ namespace Leads\Core\Action;
 use Leads\Core\Validator\ApiValidatorInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Validator\Constraints\GroupSequence;
 
 class BaseAction
 {
     public function __construct(
-        private ApiValidatorInterface $apiValidator,
+        private readonly ApiValidatorInterface $apiValidator,
     ) {
     }
 
+    /**
+     * @param array<GroupSequence|string>|null $groups
+     */
     protected function validate(object $object, ?array $groups = null): void
     {
         $this->apiValidator->validate($object, $groups);
