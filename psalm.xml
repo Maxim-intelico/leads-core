@@ -15,6 +15,11 @@
         </ignoreFiles>
     </projectFiles>
     <issueHandlers>
+        <MixedAssignment>
+            <errorLevel type="suppress">
+                <directory name="src/Payload"/>
+            </errorLevel>
+        </MixedAssignment>
         <ClassMustBeFinal>
             <errorLevel type="suppress">
                 <directory name="src"/>

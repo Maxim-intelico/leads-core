@@ -10,3 +10,17 @@ services:
             - '../../DependencyInjection/'
             - '../../Pagination/'
             - '../../Exception/'
+            - '../../Payload/Attribute/'
+            - '../../Payload/Cast/Decorator/'
+            - '../../Payload/Plan/{PayloadPlan.php,PropertyPlan.php}'
+            - '../../Payload/Error/{Reason.php,Violation.php,ViolationList.php,PropertyPathConverter.php}'
+            - '../../Payload/Error/*Exception.php'
+            - '../../Payload/{RawValue.php,Result.php,RequestContext.php}'
+
+    Leads\Core\Payload\Cast\CasterRegistry:
+        arguments:
+            $casters: !tagged_iterator leads_core.payload.caster
+
+    Leads\Core\Payload\PayloadMapper:
+        arguments:
+            $sources: !tagged_iterator { tag: 'leads_core.payload.source', default_index_method: 'key' }
