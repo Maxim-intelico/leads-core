@@ -1,11 +1,11 @@
 # leads/core
 
-Shared core bundle for Leads projects built on the Symfony Framework. It provides DBAL-based pagination, API request validation helpers and base controller utilities.
+Shared core bundle for Leads projects built on the Symfony Framework. It provides HTTP payload mapping into request DTOs, DBAL-based pagination, API request validation helpers and base controller utilities.
 
 ## Requirements
 
-- PHP >= 8.3
-- Symfony 7.2+ or 8.x (the package resolves to Symfony 8.x on PHP >= 8.4)
+- PHP >= 8.4
+- Symfony 8.1+
 - Doctrine DBAL ^4.0 (used by the pagination component)
 
 ## Installation
@@ -22,6 +22,60 @@ return [
     Leads\Core\LeadsCoreBundle::class => ['all' => true],
 ];
 ```
+
+## HTTP payload mapping
+
+`Leads\Core\Payload` maps an HTTP request into an immutable request DTO declared with attributes — no serializer, no per-endpoint glue code. Put `#[Payload]` on a controller argument and the bundle's value resolver builds, casts and validates the DTO:
+
+```php
+use Leads\Core\Payload\Attribute\Clamp;
+use Leads\Core\Payload\Attribute\FromHeader;
+use Leads\Core\Payload\Attribute\FromPath;
+use Leads\Core\Payload\Attribute\FromQuery;
+use Leads\Core\Payload\Attribute\Payload;
+
+final readonly class ListOrdersRequest
+{
+    public function __construct(
+        #[FromQuery]
+        #[Clamp(1, 100)]
+        public int $limit = 20,
+        #[FromQuery]
+        public ?\DateTimeImmutable $fromDate = null,
+        #[FromPath]
+        public string $projectId,
+        #[FromHeader('X-Request-Source')]
+        public ?string $requestSource = null,
+    ) {
+    }
+}
+
+final class ListOrdersAction
+{
+    public function __invoke(#[Payload] ListOrdersRequest $request): JsonResponse
+    {
+        // $request is fully cast and validated here
+    }
+}
+```
+
+Every constructor parameter declares its source: `#[FromBody]`, `#[FromQuery]`, `#[FromPath]` or `#[FromHeader('Name')]`. Values are cast to the parameter type (scalars, `\DateTimeImmutable`, backed enums, nested DTOs, collections via a `@param list<...>` docblock) and then run through the Symfony Validator (constraint attributes on the DTO). Additional behavior attributes:
+
+- `#[HttpPayload(groups: [...], maxBodyBytes: ...)]` (class level) — validation groups and body size limit
+- `#[Clamp(min, max)]` — clamp an int into a range
+- `#[FallbackTo(value)]` — value to use when casting fails (except type mismatches)
+- `#[Split(separator: ',')]` — split a query string into a scalar list
+- `#[MaxItems(n)]` — collection size limit (default 1000)
+- `#[FreeForm]` — accept an arbitrary array structure as-is
+- `#[Normalized]` — case-insensitive enum matching
+
+Misconfiguration (missing source attribute, unsupported type, nested constraints without `#[Assert\Valid]`, …) fails fast with a `\LogicException` when the plan is compiled — not at request time.
+
+Errors are reported per field with JSON-pointer-style paths (`body/items/0/quantity`, `query/limit`): casting failures throw a 400, validator violations a 422, plus 413 for oversized and 400 for malformed bodies. All of these implement `Leads\Core\Payload\Error\HttpProblemException`, and the bundled `PayloadExceptionListener` turns them into RFC 9457 `application/problem+json` responses automatically. `StateConflictException` (409) is available for domain-level conflicts in the same format.
+
+The component is extensible from the consuming project: implement `Leads\Core\Payload\Cast\ValueCaster` or `Leads\Core\Payload\Source\ValueSource` in your application and autoconfiguration tags it (`leads_core.payload.caster` / `leads_core.payload.source`) — no configuration needed.
+
+You can also call the mapper directly instead of using the resolver: inject `Leads\Core\Payload\PayloadMapper` and call `map(MyRequest::class, $request)`.
 
 ## Pagination
 
