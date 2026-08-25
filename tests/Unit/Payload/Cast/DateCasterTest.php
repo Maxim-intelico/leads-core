@@ -39,6 +39,18 @@ final class DateCasterTest extends TestCase
         yield 'sql datetime' => ['2026-08-07 10:30:00', '2026-08-07 10:30:00'];
         yield 'iso 8601 with offset' => ['2026-08-07T10:30:00+00:00', '2026-08-07 10:30:00'];
         yield 'iso 8601 without offset' => ['2026-08-07T10:30:00', '2026-08-07 10:30:00'];
+        yield 'iso 8601 without seconds' => ['2026-08-25T00:00', '2026-08-25 00:00:00'];
+        yield 'sql datetime without seconds' => ['2026-08-25 14:30', '2026-08-25 14:30:00'];
+    }
+
+    public function testMinutePrecisionDateTimeHasZeroedSecondsAndMicroseconds(): void
+    {
+        $result = new DateCaster()->cast(RawValue::of('2026-08-25T14:30'), $this->plan());
+
+        $this->assertTrue($result->isOk());
+        $value = $result->value();
+        $this->assertInstanceOf(\DateTimeImmutable::class, $value);
+        $this->assertSame('2026-08-25 14:30:00.000000', $value->format('Y-m-d H:i:s.u'));
     }
 
     #[DataProvider('invalidCases')]
@@ -55,6 +67,7 @@ final class DateCasterTest extends TestCase
         yield 'wrong format' => ['07.08.2026'];
         yield 'impossible date silently rolled over by PHP' => ['2026-02-31'];
         yield 'impossible datetime' => ['2026-02-31 10:00:00'];
+        yield 'impossible datetime without seconds' => ['2026-02-31T10:00'];
         yield 'empty string' => [''];
         yield 'null' => [null];
         yield 'array' => [['2026-08-07']];

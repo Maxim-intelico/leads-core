@@ -14,7 +14,8 @@ use Leads\Core\Payload\Result;
  * а supports() кастеров обязаны быть дизъюнктны — разделить их по типу свойства нельзя.
  *
  * '!Y-m-d' — «!» обнуляет время; без него подставится текущее, и fromDate
- * станет зависеть от момента запроса.
+ * станет зависеть от момента запроса. По той же причине «!» стоит и у форматов
+ * без секунд — иначе секунды возьмутся из момента запроса.
  */
 final class DateCaster implements ValueCaster
 {
@@ -24,6 +25,8 @@ final class DateCaster implements ValueCaster
         'Y-m-d H:i:s',
         \DateTimeInterface::ATOM,
         'Y-m-d\TH:i:s',
+        '!Y-m-d\TH:i',
+        '!Y-m-d H:i',
     ];
 
     public function supports(PropertyPlan $plan): bool
